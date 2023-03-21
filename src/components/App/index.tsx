@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Counter from "../Counter";
 
 import "./App.css";
@@ -8,14 +9,33 @@ const data = [
   { id: 3, value: 0 },
 ];
 
-function App() {
+export default function App() {
+  const [counters, setCounters] = useState(data);
+
   return (
     <div>
-      {data.map((counter) => (
-        <Counter key={counter.id} value={counter.value} />
+      {counters.map(({ id, value }) => (
+        <Counter
+          key={id}
+          value={value}
+          increment={() => {
+            counters[
+              counters.findIndex((counter) => counter.id === id)
+            ].value += 1;
+
+            setCounters([...counters]);
+          }}
+          decrement={() => {
+            // Might not want this to go below 0 so could
+            // conditionally return if the value is already at 0
+            counters[
+              counters.findIndex((counter) => counter.id === id)
+            ].value -= 1;
+
+            setCounters([...counters]);
+          }}
+        />
       ))}
     </div>
   );
 }
-
-export default App;
